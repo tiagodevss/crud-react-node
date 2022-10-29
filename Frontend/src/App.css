@@ -23,4 +23,10 @@
   color: rgb(1, 82, 35);
 }
 
+.containerNewTask{
+  background-color: rgb(223, 223, 223);
+  padding: 10px;
+  margin-bottom: 50px;
+  border-radius: 15px;
+}
 

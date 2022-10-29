@@ -69,17 +69,29 @@ function App() {
                   <tr key={task.id}>
                     <td>{index + 1}</td>
                     <td>{task.nome}</td>
-                    <td>{task.data}</td>
+                    <td>{task.data.split('-').reverse().join('/')}</td>
                     <td className='d-flex align-items-center justify-content-center' width={130}>
                       <div className={`task-${task.status}`}>{task.status}</div>
                     </td>
                     <td style={{ width: 120 }}>
 
                       <Container className="d-flex flex-row justify-content-around">
-                        <Button variant="warning" size='sm' onClick={() => { setUpdateTask(true); setUpdateTaskParams(task) }}>
+                        <Button
+                          variant="warning"
+                          size='sm'
+                          onClick={() => {
+                            setUpdateTask(true)
+                            setUpdateTaskParams(task)
+                          }}>
                           <FiEdit />
                         </Button>
-                        <Button variant="danger" size='sm'>
+
+                        <Button
+                          variant="danger"
+                          size='sm'
+                          onClick={() => {
+                            alert("Deseja excluir essa tarefa?")
+                          }}>
                           <AiFillDelete />
                         </Button>
                       </Container>
@@ -91,18 +103,29 @@ function App() {
           </Table>
         </Col>
       </Row>
+      <Row>
 
-      <NewTask
-        show={newTask}
-        onHide={() => setNewTask(false)}
-      />
-      <UpdateTask
-        show={updateTask}
-        params={updateTaskParams}
-        onHide={() => setUpdateTask(false)}
-      />
+        <NewTask
+          show={newTask}
+          onHide={() => setNewTask(false)}
+        />
+        <UpdateTask
+          show={updateTask}
+          params={updateTaskParams}
+          onSave={() => setUpdateTaskParams()}
+          onHide={() => setUpdateTask(false)}
+        />
 
-    </Container>
+
+        {/*<Col>
+          <UpdateTask
+            show={updateTask}
+            params={updateTaskParams}
+            onHide={() => setUpdateTask(false)}
+          />
+        </Col>*/}
+      </Row>
+    </Container >
 
   );
 }

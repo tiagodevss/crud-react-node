@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Col, Form, Row } from 'react-bootstrap';
+import { Col, Container, Form, Row } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Api from '../functions/Api';
@@ -22,6 +22,7 @@ export default function NewTask(props) {
                 resolve(res);
                 props.onHide();
             }).catch(err => {
+                console.log(err)
                 reject(err)
                 props.onHide();
             })
@@ -29,17 +30,13 @@ export default function NewTask(props) {
     }
 
     return (
-        <Modal
-            {...props}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-        >
+
+
+        <Modal show={props.show} onHide={props.onHide}>
             <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
-                    Adicionar nova tarefa
-                </Modal.Title>
+                <Modal.Title>Adicionar tarefa</Modal.Title>
             </Modal.Header>
+
             <Modal.Body>
                 <Row className='d-flex justify-content-center'>
                     <Col md={8}>
@@ -58,9 +55,8 @@ export default function NewTask(props) {
                                 setData(`${splited[2]}/${splited[1]}/${splited[0]}`)
                             }}
                         />
-                        <Form.Label htmlFor="select">Nome</Form.Label>
+                        <Form.Label htmlFor="select">Status</Form.Label>
                         <Form.Select
-                            aria-label="Default select example"
                             id='select'
                             onChange={e => setStatus(e.target.value)}>
                             <option>Pendente</option>
@@ -69,9 +65,11 @@ export default function NewTask(props) {
                     </Col>
                 </Row>
             </Modal.Body>
+
             <Modal.Footer>
                 <Button onClick={() => addTask()} variant="success">Adicionar</Button>
             </Modal.Footer>
-        </Modal >
+        </Modal>
+
     );
 }
