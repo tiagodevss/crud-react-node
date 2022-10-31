@@ -59,7 +59,7 @@ app.put('/update', (req, res) => {
     }
 })
 
-app.delete('/delete', (req, res) => {
+app.post('/delete', (req, res) => {
     if (req.body.key == 'key123') {
         if (req.body.id == null) {
             res.json("You need to provide the id from task")

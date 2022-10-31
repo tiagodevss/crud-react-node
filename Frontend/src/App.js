@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Table, Row, Col, Container } from 'react-bootstrap';
 import './App.css';
-import Api from './functions/Api'
+import Api from './Api'
 import { FiEdit } from 'react-icons/fi'
 import { AiFillDelete } from 'react-icons/ai'
 import { IoIosAddCircle } from 'react-icons/io'
-import NewTask from './modals/NewTask';
-import UpdateTask from './modals/UpdateTask';
+import NewTask from './functions/NewTask';
+import UpdateTask from './functions/UpdateTask';
+import DeleteTask from './functions/DeleteTask';
 
 function App() {
   //Tasks
@@ -15,6 +16,7 @@ function App() {
   //Modals Configs
   const [newTask, setNewTask] = useState(false);
   const [updateTask, setUpdateTask] = useState(false);
+  const [deleteTask, setDeleteTask] = useState(false);
 
   //Params for Funcions
   const [updateTaskParams, setUpdateTaskParams] = useState(); //UploadTask
@@ -29,7 +31,7 @@ function App() {
         setTasks(res.data)
       })
       .catch(err => console.error(err))
-  }, [newTask, updateTask])
+  }, [newTask, updateTask, deleteTask])
 
 
 
@@ -89,8 +91,13 @@ function App() {
                         <Button
                           variant="danger"
                           size='sm'
-                          onClick={() => {
-                            alert("Deseja excluir essa tarefa?")
+                          onClick={async () => {
+                            const confirmation = window.confirm("Deseja mesmo apagar essa tarefa?")
+                            if (confirmation == true){
+                              setDeleteTask(true)
+                              await DeleteTask(task.id).then(() => setDeleteTask(false))
+                              
+                            }
                           }}>
                           <AiFillDelete />
                         </Button>
@@ -104,7 +111,6 @@ function App() {
         </Col>
       </Row>
       <Row>
-
         <NewTask
           show={newTask}
           onHide={() => setNewTask(false)}
@@ -115,15 +121,6 @@ function App() {
           onSave={() => setUpdateTaskParams()}
           onHide={() => setUpdateTask(false)}
         />
-
-
-        {/*<Col>
-          <UpdateTask
-            show={updateTask}
-            params={updateTaskParams}
-            onHide={() => setUpdateTask(false)}
-          />
-        </Col>*/}
       </Row>
     </Container >
 

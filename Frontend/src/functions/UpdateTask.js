@@ -1,40 +1,48 @@
 import { useState } from 'react';
-import { Col, Container, Form, Row } from 'react-bootstrap';
+import { Col, Form, Row, Container } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import Api from '../functions/Api';
+import Api from '../Api';
 
-export default function NewTask(props) {
+export default function UpdateTask(props) {
     const [nome, setNome] = useState()
     const [data, setData] = useState()
-    const [status, setStatus] = useState("Pendente")
+    const [status, setStatus] = useState()
 
-    async function addTask() {
+    const id = props.params?.id
+
+    async function updateTask() {
         return new Promise(async (resolve, reject) => {
             const params = {
                 "key": "key123",
-                "nome": nome,
-                "data": data,
-                "status": status
+                "id": id,
+                "nome": nome || props.params?.nome,
+                "data": data || props.params?.data,
+                "status": status || props.params?.status
             }
 
-            await Api.post("/create", params).then((res) => {
+            await Api.put("/update", params).then((res) => {
                 resolve(res);
+                setNome()
+                setData()
+                setStatus()
+                props.onSave()
                 props.onHide();
             }).catch(err => {
-                console.log(err)
                 reject(err)
+                setNome()
+                setData()
+                setStatus()
+                props.onSave()
                 props.onHide();
             })
         })
     }
 
     return (
-
-
         <Modal show={props.show} onHide={props.onHide}>
             <Modal.Header closeButton>
-                <Modal.Title>Adicionar tarefa</Modal.Title>
+                <Modal.Title>Atualizar tarefa</Modal.Title>
             </Modal.Header>
 
             <Modal.Body>
@@ -44,21 +52,23 @@ export default function NewTask(props) {
                         <Form.Control
                             type="text"
                             id="nome"
+                            value={nome || props.params?.nome}
                             onChange={e => setNome(e.target.value)}
                         />
                         <Form.Label htmlFor="data">Data</Form.Label>
                         <Form.Control
                             type="date"
                             id="data"
-                            onChange={e => {
-                                const splited = e.target.value.split("-")
-                                setData(`${splited[2]}/${splited[1]}/${splited[0]}`)
-                            }}
+                            value={data || props.params?.data}
+                            onChange={e => setData(e.target.value)}
                         />
                         <Form.Label htmlFor="select">Status</Form.Label>
                         <Form.Select
+                            aria-label="Default select example"
                             id='select'
-                            onChange={e => setStatus(e.target.value)}>
+                            value={status || props.params?.status}
+                            onChange={e => setStatus(e.target.value)}
+                        >
                             <option>Pendente</option>
                             <option>Concluído</option>
                         </Form.Select>
@@ -67,7 +77,7 @@ export default function NewTask(props) {
             </Modal.Body>
 
             <Modal.Footer>
-                <Button onClick={() => addTask()} variant="success">Adicionar</Button>
+                <Button onClick={() => updateTask()} variant="success">Adicionar</Button>
             </Modal.Footer>
         </Modal>
 
